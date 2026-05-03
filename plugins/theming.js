@@ -382,6 +382,85 @@ const presets = [
 *, .luduvoButton {
   border-radius: 0px !important;
 }`
+    },
+    {
+        id: "compact-nav",
+        name: "Compact navbar",
+        description: "Reduces the size of the top navbar.",
+        css: `header {
+    height: auto;
+    isolation: isolate;
+}
+
+nav {
+    padding: 1px;
+    padding-left: 8px;
+    align-items: center;
+}
+
+nav div {
+    align-items: center;
+}
+
+nav>div:first-child>div {
+    min-width: 0;
+}
+
+nav>div:first-child a {
+    min-width: 0;
+}
+
+[class="flex flex-row items-center gap-4"] {
+    gap: 0;
+}
+
+@media (min-width: 768px) {
+    nav a svg:first-of-type {
+        min-width: 120px;
+    }
+
+    [class="flex flex-row items-center gap-4"] {
+        gap: 10px;
+    }
+}
+    
+div[class*="h-16 w-full"] {
+    height: 45px;
+}`
+    },
+    {
+        id: "compact-profile",
+        name: "Compact profiles",
+        description: "Reduces the size of profile cards.",
+        css: `[class="rounded-lg profile-accent-bg p-8 flex flex-col justify-center items-start gap-2"] {
+  padding: 0;
+  overflow: hidden;
+}
+
+[class="cursor-pointer active:scale-95 inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive ease-[cubic-bezier(.86,.05,.16,.97)] hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 size-9 shrink-0"] {
+  margin-right: 10px;
+}
+
+div.profile-accent-bg [data-slot="avatar"],
+div.profile-accent-bg [data-slot="avatar-image"] {
+    border-radius: 0 !important;
+}`
+    },
+    {
+        id: "compact-friends",
+        name: "Compact friends",
+        description: "Reduces the size of friend cards.",
+        css: `@layer utilities {
+  button[data-slot="button"].\\!p-4 {
+    padding: 0 !important;
+    overflow: hidden;
+  }
+}
+
+button[data-slot="button"] [data-slot="avatar"],
+button[data-slot="button"] [data-slot="avatar"] img {
+  border-radius: 0px;
+}`
     }
 ];
 
@@ -398,6 +477,7 @@ const constantStyle = `
         flex-direction: column;
         height: calc(100vh - 40px);
         box-sizing: border-box;
+        min-width: 0;
     }
 
     #editorcontainer { 
@@ -407,10 +487,13 @@ const constantStyle = `
         overflow: hidden;
         background-color: #282c34;
         font-family: 'JetBrains Mono', monospace; 
+        min-width: 0;
     }
 
     .cm-editor { 
         height: 100% !important; 
+        min-width: 0;
+        max-width: 100%;
     }
     .cm-scroller { overflow: auto; }
 
@@ -419,6 +502,7 @@ const constantStyle = `
         gap: 1rem;
         flex: 1;
         min-height: 0;
+        min-width: 0;
     }
     .presetpanel {
         width: 18rem;
@@ -427,8 +511,10 @@ const constantStyle = `
         border: 1px solid #444;
         border-radius: 0.75rem;
         padding: 1rem;
+        box-sizing: border-box;
+        height: 100%;
+        min-height: 0;
         overflow: auto;
-        max-height: calc(100vh - 100px);
     }
     .presetpanel h3 {
         margin: 0 0 0.75rem;
@@ -462,6 +548,8 @@ const constantStyle = `
         display: flex;
         flex-direction: column;
         min-height: 0;
+        min-width: 0;
+        overflow: hidden;
     }
     .buttoncontainer {
         display: flex;
