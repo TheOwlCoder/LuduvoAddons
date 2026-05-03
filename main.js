@@ -31,10 +31,12 @@ async function onLoad() {
         document.title = "Addons - Luduvo";
         await ui.setPageContentAsync(`
             <div class="container xl:px-16 px-4 md:mx-auto py-12 flex flex-col gap-8">
-                <h1 style="display: flex; align-items: center;" class="text-3xl md:text-5xl font-bold">Luduvo Addons <button id="loadExternal" class="luduvoButton red" style="margin-left: 25px; margin-top: 8px;">Load External</button></h1>
+                <h1 style="display: flex; align-items: center;" class="text-3xl md:text-5xl font-bold">Luduvo Addons Beta <button id="loadExternal" class="luduvoButton red" style="margin-left: 25px; margin-top: 8px;">Load External</button></h1>
                 <div id="addonsContainer">
                 </div>
+                <p style="color: var(--muted-foreground);">Addon created with &#10084;&#65039; by <a class="btLink" href="/profile/47">owl</a> and the community. Join the <a class="btLink" href="https://discord.gg/TBZacaR2Hd">Discord server</a>! Look at the <a class="btLink" href="https://github.com/TheOwlCoder/LuduvoAddons">GitHub repo</a>!</p>
             </div>
+            <style> a.btLink{text-decoration: underline; transition: 200ms; cursor: pointer;} a.btLink:hover{color: var(--foreground) !important; opacity: 100% !important;}
         `);
         ui.main.querySelector("#loadExternal").addEventListener("click", async e => {
             const leDialog = new Dialog("Load External Addon", "Insert the URL of an external addon's manifest.json", "Load");
@@ -82,7 +84,14 @@ async function onLoad() {
         })
 
     }
-    addons.navigationAddon("/addons", loadAddonsUI, () => { addonsButton.classList.remove("bg-black/20") })
+    addons.navigationAddon("/addons", loadAddonsUI, () => { addonsButton.classList.remove("bg-black/20") });
+
+    if (localStorage.getItem("readLANotice") !== "1") {
+        const laNotice = new Dialog("Luduvo Addons", "Thank you for trying Luduvo Addons", "");
+        laNotice.content = "<p>Thank you for trying Luduvo Addons Beta.<br>Remember that this extension is still in beta, and was made in one week and as such you will likely encounter bugs. Report them in the Discord server or GitHub repo!</p>";
+        localStorage.setItem("readLANotice", "1");
+        laNotice.show();
+    }
 }
 localStorage.setItem("addonSettings", localStorage.getItem("addonSettings") || "{}")
 localStorage.setItem("customAddons", localStorage.getItem("customAddons") || "{}")
