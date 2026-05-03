@@ -555,18 +555,17 @@ if (addons.addonIsEnabled("theming")) {
 
     savedThemeStyle(theme);
 
-    setTimeout(() => {
-        addons.navigationAddon("/theme", () => {
-            savedThemeStyle(theme);
-            liveThemeStyle(theme);
-            removePreviewThemeStyle();
-            currentPreviewPresetId = null;
-            setThemePageDirty(false);
-            leaveWarning();
-            enableThemeLock();
-            pathWatcher();
+    addons.navigationAddon("/theme", () => {
+        savedThemeStyle(theme);
+        liveThemeStyle(theme);
+        removePreviewThemeStyle();
+        currentPreviewPresetId = null;
+        setThemePageDirty(false);
+        leaveWarning();
+        enableThemeLock();
+        pathWatcher();
 
-            ui.setPageContent(constantStyle + `
+        ui.setPageContent(constantStyle + `
                 <div class="p-4 themepage">
                     <h2 class="text-xl font-bold mb-2">Theme Editor</h2>
 
@@ -587,16 +586,16 @@ if (addons.addonIsEnabled("theming")) {
                 </div>
             `);
 
-            const saveButton = document.getElementById("save-theme");
-            const resetButton = document.getElementById("reset-theme");
-            const presetList = document.getElementById("preset-list");
-            const themeList = document.getElementById("theme-list");
+        const saveButton = document.getElementById("save-theme");
+        const resetButton = document.getElementById("reset-theme");
+        const presetList = document.getElementById("preset-list");
+        const themeList = document.getElementById("theme-list");
 
-            function renderPresets(view) {
-                presets.forEach(preset => {
-                    const card = document.createElement("div");
-                    card.className = "presetcard";
-                    card.innerHTML = `
+        function renderPresets(view) {
+            presets.forEach(preset => {
+                const card = document.createElement("div");
+                card.className = "presetcard";
+                card.innerHTML = `
                         <div class="font-semibold">${preset.name}</div>
                         <div class="text-xs opacity-70">${preset.description}</div>
                         <pre>${preset.css}</pre>
@@ -605,147 +604,146 @@ if (addons.addonIsEnabled("theming")) {
                             <button class="luduvoButton red" data-action="preview" data-preset-id="${preset.id}">preview</button>
                         </div>
                     `;
-                    presetList.appendChild(card);
-                });
+                presetList.appendChild(card);
+            });
 
-                const luduvoThemes = getLuduvoThemes();
-                luduvoThemes.forEach(theme => {
-                    const card = document.createElement("div");
-                    card.className = "presetcard";
-                    card.innerHTML = `
+            const luduvoThemes = getLuduvoThemes();
+            luduvoThemes.forEach(theme => {
+                const card = document.createElement("div");
+                card.className = "presetcard";
+                card.innerHTML = `
                         <div class="font-semibold">${theme.name}</div>
                         <div class="text-xs opacity-70">Luduvo built-in theme</div>
                         <div class="preset-actions">
                             <button class="luduvoButton" data-action="load-theme" data-theme-selector="${theme.selector}">use as base</button>
                         </div>
                     `;
-                    themeList.appendChild(card);
-                });
+                themeList.appendChild(card);
+            });
 
-                presetList.addEventListener("click", event => {
-                    const button = event.target.closest("button");
-                    if (!button) return;
-                    const action = button.dataset.action;
-                    const presetId = button.dataset.presetId;
-                    const preset = presets.find(p => p.id === presetId);
-                    if (!preset) return;
+            presetList.addEventListener("click", event => {
+                const button = event.target.closest("button");
+                if (!button) return;
+                const action = button.dataset.action;
+                const presetId = button.dataset.presetId;
+                const preset = presets.find(p => p.id === presetId);
+                if (!preset) return;
 
-                    if (action === "insert") {
-                        view.dispatch({
-                            changes: {
-                                from: view.state.doc.length,
-                                to: view.state.doc.length,
-                                insert: `\n\n${preset.css}`
-                            }
-                        });
-
-                        removePreviewThemeStyle();
-                        currentPreviewPresetId = null;
-                        presetList.querySelectorAll('[data-action="preview"]').forEach(btn => {
-                            btn.textContent = "preview";
-                        });
-                    } else if (action === "preview") {
-                        const allPreviewButtons = presetList.querySelectorAll('[data-action="preview"]');
-
-                        allPreviewButtons.forEach(btn => {
-                            btn.textContent = "preview";
-                        });
-
-                        if (currentPreviewPresetId === presetId) {
-                            removePreviewThemeStyle();
-                            currentPreviewPresetId = null;
-                        } else {
-                            previewThemeStyle(preset.css);
-                            currentPreviewPresetId = presetId;
-                            button.textContent = "stop previewing";
-                        }
-                    }
-                });
-
-                themeList.addEventListener("click", event => {
-                    const button = event.target.closest("button");
-                    if (!button || button.dataset.action !== "load-theme") return;
-                    const themeSelector = button.dataset.themeSelector;
-                    const theme = luduvoThemes.find(t => t.selector === themeSelector);
-                    if (!theme) return;
-
-                    let newCss = theme.css.replace(new RegExp(`^${theme.selector}`, 'm'), '.customTheme');
-
-                    const selectorMatch = newCss.match(/^[^{]+/);
-                    const propertiesMatch = newCss.match(/{[^}]+}/);
-                    if (selectorMatch && propertiesMatch) {
-                        const selector = selectorMatch[0];
-                        const properties = propertiesMatch[0].slice(1, -1).split(';').filter(p => p.trim()).map(p => {
-                            const [key, ...valParts] = p.split(':');
-                            let value = valParts.join(':').trim();
-                            if (value.startsWith('oklch(')) {
-                                value = oklchToHex(value);
-                            }
-                            return key.trim() + ': ' + value;
-                        });
-                        newCss = selector + ' {\n' + properties.map(p => '  ' + p + ';').join('\n') + '\n}';
-                    }
+                if (action === "insert") {
                     view.dispatch({
                         changes: {
-                            from: 0,
+                            from: view.state.doc.length,
                             to: view.state.doc.length,
-                            insert: newCss
+                            insert: `\n\n${preset.css}`
                         }
                     });
-                });
-            }
 
-            initEditor(theme).then(view => {
-                renderPresets(view);
-
-                saveButton.addEventListener("click", () => {
-                    const updatedTheme = view.state.doc.toString();
-                    localStorage.setItem("theming.customTheme", updatedTheme);
-                    theme = updatedTheme;
-                    savedThemeStyle(updatedTheme);
-                    liveThemeStyle(updatedTheme);
                     removePreviewThemeStyle();
                     currentPreviewPresetId = null;
-                    setThemePageDirty(false);
-
                     presetList.querySelectorAll('[data-action="preview"]').forEach(btn => {
                         btn.textContent = "preview";
                     });
+                } else if (action === "preview") {
+                    const allPreviewButtons = presetList.querySelectorAll('[data-action="preview"]');
 
-                    saveButton.textContent = "saved";
-                    setTimeout(() => {
-                        if (document.body.contains(saveButton)) {
-                            saveButton.textContent = "save changes";
-                        }
-                    }, 1200);
-                });
-
-                resetButton.addEventListener("click", () => {
-                    localStorage.setItem("theming.customTheme", initialTheme);
-                    theme = initialTheme;
-                    savedThemeStyle(initialTheme);
-                    liveThemeStyle(initialTheme);
-                    removePreviewThemeStyle();
-                    currentPreviewPresetId = null;
-                    setThemePageDirty(false);
-
-                    view.dispatch({
-                        changes: {
-                            from: 0,
-                            to: view.state.doc.length,
-                            insert: initialTheme
-                        }
+                    allPreviewButtons.forEach(btn => {
+                        btn.textContent = "preview";
                     });
 
-                    resetButton.textContent = "reset";
+                    if (currentPreviewPresetId === presetId) {
+                        removePreviewThemeStyle();
+                        currentPreviewPresetId = null;
+                    } else {
+                        previewThemeStyle(preset.css);
+                        currentPreviewPresetId = presetId;
+                        button.textContent = "stop previewing";
+                    }
+                }
+            });
+
+            themeList.addEventListener("click", event => {
+                const button = event.target.closest("button");
+                if (!button || button.dataset.action !== "load-theme") return;
+                const themeSelector = button.dataset.themeSelector;
+                const theme = luduvoThemes.find(t => t.selector === themeSelector);
+                if (!theme) return;
+
+                let newCss = theme.css.replace(new RegExp(`^${theme.selector}`, 'm'), '.customTheme');
+
+                const selectorMatch = newCss.match(/^[^{]+/);
+                const propertiesMatch = newCss.match(/{[^}]+}/);
+                if (selectorMatch && propertiesMatch) {
+                    const selector = selectorMatch[0];
+                    const properties = propertiesMatch[0].slice(1, -1).split(';').filter(p => p.trim()).map(p => {
+                        const [key, ...valParts] = p.split(':');
+                        let value = valParts.join(':').trim();
+                        if (value.startsWith('oklch(')) {
+                            value = oklchToHex(value);
+                        }
+                        return key.trim() + ': ' + value;
+                    });
+                    newCss = selector + ' {\n' + properties.map(p => '  ' + p + ';').join('\n') + '\n}';
+                }
+                view.dispatch({
+                    changes: {
+                        from: 0,
+                        to: view.state.doc.length,
+                        insert: newCss
+                    }
+                });
+            });
+        }
+
+        initEditor(theme).then(view => {
+            renderPresets(view);
+
+            saveButton.addEventListener("click", () => {
+                const updatedTheme = view.state.doc.toString();
+                localStorage.setItem("theming.customTheme", updatedTheme);
+                theme = updatedTheme;
+                savedThemeStyle(updatedTheme);
+                liveThemeStyle(updatedTheme);
+                removePreviewThemeStyle();
+                currentPreviewPresetId = null;
+                setThemePageDirty(false);
+
+                presetList.querySelectorAll('[data-action="preview"]').forEach(btn => {
+                    btn.textContent = "preview";
                 });
 
-            }).catch(err => {
-                console.error("init failed:", err);
+                saveButton.textContent = "saved";
+                setTimeout(() => {
+                    if (document.body.contains(saveButton)) {
+                        saveButton.textContent = "save changes";
+                    }
+                }, 1200);
             });
-        }, () => {
-            stopPathWatcher();
-            cleanupFx();
+
+            resetButton.addEventListener("click", () => {
+                localStorage.setItem("theming.customTheme", initialTheme);
+                theme = initialTheme;
+                savedThemeStyle(initialTheme);
+                liveThemeStyle(initialTheme);
+                removePreviewThemeStyle();
+                currentPreviewPresetId = null;
+                setThemePageDirty(false);
+
+                view.dispatch({
+                    changes: {
+                        from: 0,
+                        to: view.state.doc.length,
+                        insert: initialTheme
+                    }
+                });
+
+                resetButton.textContent = "reset";
+            });
+
+        }).catch(err => {
+            console.error("init failed:", err);
         });
-    }, 500);
+    }, () => {
+        stopPathWatcher();
+        cleanupFx();
+    });
 }
