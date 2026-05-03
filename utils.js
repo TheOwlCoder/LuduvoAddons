@@ -139,7 +139,7 @@ const ui = {
     }
 }
 
-const observer = new MutationObserver((mutations, obs) => {
+const loadObserver = new MutationObserver((mutations, obs) => {
     if (!ui.main) {
         const main = document.querySelector("main");
         if (main) ui.main = main;
@@ -160,18 +160,17 @@ const observer = new MutationObserver((mutations, obs) => {
     }
 });
 
-observer.observe(document, {
+loadObserver.observe(document, {
     childList: true,
     subtree: true
 });
 
-function getCookie(name) {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
-};
-
 (async () => {
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    };
     window.currentUserData = await fetch("https://api.luduvo.com/me/profile", {
         headers: {
             accept: "*/*",

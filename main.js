@@ -65,13 +65,13 @@ async function onLoad() {
             }
             leDialog.show();
         })
-        
+
         addons.registerAddon("No Subscriptions", "noSub", "Removes annoying subscription-only menus and advertisements.");
         addons.registerAddon("UI Fixes", "uiFix", "Fixes broken or odd UI styling.");
         addons.registerAddon("Select Anything", "selAll", "Makes all text selectable.");
         addons.registerAddon("Inbox Categories", "ibCat", "Sorts your inbox notifications into categories.");
         addons.registerAddon("Lunes to USD [BETA]", "lunes2USD", "Displays how much an item costs in USD.");
-        // FOR DEVELOPERS: It is recommended you clone this repo and develop your addon in /plugins/test.js instead of loading it each update.
+        // FOR DEVELOPERS: It is recommended you clone this repo and develop your addon ins /plugins/test.js instead of loading it each update.
         // addons.registerAddon("My addon", "test", "my description");
 
         const customAddons = JSON.parse(localStorage.getItem("customAddons"));
@@ -87,4 +87,14 @@ localStorage.setItem("addonSettings", localStorage.getItem("addonSettings") || "
 localStorage.setItem("customAddons", localStorage.getItem("customAddons") || "{}")
 
 
-addons.pageLoadAddon(onLoad)
+const observer = new MutationObserver((mutations, obs) => {
+    if (document.querySelector("main")) {
+        onLoad();
+        observer.disconnect();
+    }
+})
+
+observer.observe(document, {
+    childList: true,
+    subtree: true
+});
