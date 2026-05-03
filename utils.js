@@ -73,9 +73,11 @@ const addons = {
                     if (waitForMainLoad && !document.querySelector("main")) {
                         await ui.waitForElement("main");
                         ui.main = document.querySelector("main");
+                        wasLoaded = true;
                         await onNavigate({ url: location.pathname.split("/") });
                     } else {
                         ui.main = document.querySelector("main");
+                        wasLoaded = true;
                         await onNavigate({ url: location.pathname.split("/") });
                     }
                 }
@@ -83,9 +85,11 @@ const addons = {
                 if (waitForMainLoad && !document.querySelector("main")) {
                     await ui.waitForElement("main")
                     ui.main = document.querySelector("main");
+                    wasLoaded = true;
                     await onNavigate({ url: location.pathname.split("/") });
                 } else {
                     ui.main = document.querySelector("main");
+                    wasLoaded = true;
                     await onNavigate({ url: location.pathname.split("/") });
                 }
             } else {

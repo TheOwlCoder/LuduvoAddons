@@ -1,34 +1,33 @@
 if (addons.addonIsEnabled("ibCat")) {
-    addons.pageLoadAddon(() => {
-        // console.log("load3wesknfnvwuj")
-        const observer = new MutationObserver(() => {
-            const popover = document.querySelector('[data-slot="popover-content"]');
+    // console.log("load3wesknfnvwuj")
+    const observer = new MutationObserver(() => {
+        const popover = document.querySelector('[data-slot="popover-content"]');
 
-            if (!popover || popover.getAttribute("loaded")) return;
+        if (!popover || popover.getAttribute("loaded")) return;
 
-            const listCon = popover.querySelector('.space-y-2');
-            if (!listCon || listCon.children.length === 0) return;
+        const listCon = popover.querySelector('.space-y-2');
+        if (!listCon || listCon.children.length === 0) return;
 
-            popover.setAttribute("loaded", "true");
-            popover.style.width = "22rem";
+        popover.setAttribute("loaded", "true");
+        popover.style.width = "22rem";
 
-            const categories = { friendRequests: [], itemApproveds: [], others: [] };
+        const categories = { friendRequests: [], itemApproveds: [], others: [] };
 
-            Array.from(listCon.children).forEach(card => {
-                const title = card.querySelector('[data-slot="card-title"]')?.textContent || "";
-                const desc = card.querySelector('[data-slot="card-description"]')?.textContent || "";
+        Array.from(listCon.children).forEach(card => {
+            const title = card.querySelector('[data-slot="card-title"]')?.textContent || "";
+            const desc = card.querySelector('[data-slot="card-description"]')?.textContent || "";
 
-                if (title.includes("Item approved")) {
-                    categories.itemApproveds.push(card);
-                } else if (desc.includes("sent you a friend request")) {
-                    categories.friendRequests.push(card);
-                } else {
-                    categories.others.push(card);
-                }
-            });
+            if (title.includes("Item approved")) {
+                categories.itemApproveds.push(card);
+            } else if (desc.includes("sent you a friend request")) {
+                categories.friendRequests.push(card);
+            } else {
+                categories.others.push(card);
+            }
+        });
 
-            const uiWrapper = document.createElement('div');
-            uiWrapper.innerHTML = `
+        const uiWrapper = document.createElement('div');
+        uiWrapper.innerHTML = `
             <div style="display: flex; gap: 5px; margin-bottom: 10px;">
                 <button class="luduvoButton" cat="fr">Friend Requests</button>
                 <button class="luduvoButton" cat="ia">Item Approvals</button>
@@ -36,22 +35,21 @@ if (addons.addonIsEnabled("ibCat")) {
             </div>
         `;
 
-            listCon.prepend(uiWrapper);
+        listCon.prepend(uiWrapper);
 
-            const loadCat = (type) => {
-                categories.friendRequests.forEach(el => el.style.display = (type === 'fr' ? 'flex' : 'none'));
-                categories.itemApproveds.forEach(el => el.style.display = (type === 'ia' ? 'flex' : 'none'));
-                categories.others.forEach(el => el.style.display = (type === 'ot' ? 'flex' : 'none'));
-            };
+        const loadCat = (type) => {
+            categories.friendRequests.forEach(el => el.style.display = (type === 'fr' ? 'flex' : 'none'));
+            categories.itemApproveds.forEach(el => el.style.display = (type === 'ia' ? 'flex' : 'none'));
+            categories.others.forEach(el => el.style.display = (type === 'ot' ? 'flex' : 'none'));
+        };
 
-            uiWrapper.addEventListener('click', (e) => {
-                const cat = e.target.getAttribute('cat');
-                if (cat) loadCat(cat);
-            });
-
-            loadCat('fr');
+        uiWrapper.addEventListener('click', (e) => {
+            const cat = e.target.getAttribute('cat');
+            if (cat) loadCat(cat);
         });
 
-        observer.observe(document.body, { childList: true, subtree: true });
-    })
+        loadCat('fr');
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
 }
