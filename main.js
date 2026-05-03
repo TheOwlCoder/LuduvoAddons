@@ -71,6 +71,7 @@ async function onLoad() {
         addons.registerAddon("Select Anything", "selAll", "Makes all text selectable.");
         addons.registerAddon("Inbox Categories", "ibCat", "Sorts your inbox notifications into categories.");
         addons.registerAddon("Lunes to USD [BETA]", "lunes2USD", "Displays how much an item costs in USD.");
+        addons.registerAddon("Theming", "theming", "Allows advanced customization of the website's appearance.", false, true);
         // FOR DEVELOPERS: It is recommended you clone this repo and develop your addon ins /plugins/test.js instead of loading it each update.
         // addons.registerAddon("My addon", "test", "my description");
 

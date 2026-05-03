@@ -5,7 +5,8 @@
   "web_accessible_resources": [
     {
       "resources": [
-        "custom.js"
+        "custom.js",
+        "common/codemirror/main.js"
       ],
       "matches": [
         "https://*.luduvo.com/*"
@@ -36,7 +37,8 @@
         "plugins/noSubscriptions.js",
         "plugins/uiFix.js",
         "plugins/test.js",
-        "plugins/inboxCategories.js"
+        "plugins/inboxCategories.js",
+        "plugins/theming.js"
       ],
       "css": [
         "components/button.css",
