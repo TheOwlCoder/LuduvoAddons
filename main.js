@@ -23,13 +23,13 @@ async function onLoad() {
         topNavButtons = null;
     }
 
-    function loadAddonsUI() {
+    async function loadAddonsUI() {
         if (topNavButtons) Array.from(topNavButtons.children).forEach(e => {
             e.classList.remove("bg-black/20")
         })
         addonsButton.classList.add("bg-black/20");
         document.title = "Addons - Luduvo";
-        ui.setPageContent(`
+        await ui.setPageContentAsync(`
             <div class="container xl:px-16 px-4 md:mx-auto py-12 flex flex-col gap-8">
                 <h1 style="display: flex; align-items: center;" class="text-3xl md:text-5xl font-bold">Luduvo Addons <button id="loadExternal" class="luduvoButton red" style="margin-left: 25px; margin-top: 8px;">Load External</button></h1>
                 <div id="addonsContainer">

@@ -50,18 +50,15 @@ const addons = {
     },
     registerSettings: (id, callback) => {
         addons.navigationAddon("/addons", async e => {
-            const a = setInterval(() => {
-                const button = ui.main.querySelector(`[role="settingsButton ${id}"]`);
-                if (button) {
-                    button.addEventListener("click", async e => {
-                        const settingsDialog = new Dialog("Addon Settings", "", "Save");
-                        await callback(settingsDialog);
-                        settingsDialog.show();
-                    });
-                    clearInterval(a);
-                }
-            }, 20);
-        });
+            await ui.waitForElement(`[role="settingsButton ${id}"]`)
+            const button = ui.main.querySelector(`[role="settingsButton ${id}"]`);
+            console.log(button)
+            button.addEventListener("click", async e => {
+                const settingsDialog = new Dialog("Addon Settings", "", "Save");
+                await callback(settingsDialog);
+                settingsDialog.show();
+            });
+        })
     },
     addonIsEnabled: (id) => {
         return JSON.parse(localStorage.getItem("addonSettings"))[id]
@@ -74,15 +71,21 @@ const addons = {
                 const [start, end] = path.split("*");
                 if (location.pathname.startsWith(start) && location.pathname.endsWith(end)) {
                     if (waitForMainLoad && !document.querySelector("main")) {
-                        addons.pageLoadAddon(async () => { await onNavigate({ url: location.pathname.split("/") }); })
+                        await ui.waitForElement("main");
+                        ui.main = document.querySelector("main");
+                        await onNavigate({ url: location.pathname.split("/") });
                     } else {
+                        ui.main = document.querySelector("main");
                         await onNavigate({ url: location.pathname.split("/") });
                     }
                 }
             } else if (location.pathname == path) {
                 if (waitForMainLoad && !document.querySelector("main")) {
-                    addons.pageLoadAddon(async () => { await onNavigate({ url: location.pathname.split("/") }); })
+                    await ui.waitForElement("main")
+                    ui.main = document.querySelector("main");
+                    await onNavigate({ url: location.pathname.split("/") });
                 } else {
+                    ui.main = document.querySelector("main");
                     await onNavigate({ url: location.pathname.split("/") });
                 }
             } else {
@@ -128,13 +131,14 @@ const ui = {
             ui.main = document.querySelector("main");
             document.querySelector("main").classList = "";
             document.querySelector("main").innerHTML = html;
+            ui.main.classList = "relative w-full h-full overflow-hidden";
             return document.querySelector("main");
         }
     },
     setPageContentAsync: async html => { // this is probably useful idk
         await ui.waitForElement("main");
-        ui.main = document.querySelector(selector);
-        ui.main.innerHTML = html;
+        ui.main = document.querySelector("main");
+        ui.setPageContent(html)
         return ui.main
     }
 }
@@ -165,12 +169,13 @@ loadObserver.observe(document, {
     subtree: true
 });
 
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+};
+
 (async () => {
-    function getCookie(name) {
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) return parts.pop().split(';').shift();
-    };
     window.currentUserData = await fetch("https://api.luduvo.com/me/profile", {
         headers: {
             accept: "*/*",
