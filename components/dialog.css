@@ -1,0 +1,99 @@
+.luduvoDialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    z-index: 50;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    width: calc(100% - 2rem);
+    max-width: 32rem;
+    transform: translate(-50%, -50%);
+    gap: 1rem;
+    border: 1px solid var(--border);
+    background-color: var(--background);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-lg);
+    border-radius: var(--radius);
+    transition-duration: 200ms;
+    transition-timing-function: cubic-bezier(.86, .05, .16, .97);
+}
+
+.luduvoDialog[data-state='open'] {
+    animation: luduvo-in 200ms cubic-bezier(.86, .05, .16, .97);
+}
+
+.luduvoDialog[data-state='closed'] {
+    animation: luduvo-out 200ms cubic-bezier(.86, .05, .16, .97);
+}
+
+.luduvoDialog>.close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    border-radius: 0.125rem;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+    outline: none;
+}
+
+.luduvoDialog>.close:hover {
+    opacity: 1;
+}
+
+.luduvoDialog>.close:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--background), 0 0 0 4px var(--ring);
+}
+
+.luduvoDialog>.close[data-state='open'] {
+    background-color: var(--accent);
+    color: var(--muted-foreground);
+}
+
+.luduvoDialog>.close:disabled {
+    pointer-events: none;
+}
+
+.luduvoDialog>.close svg {
+    pointer-events: none;
+    flex-shrink: 0;
+}
+
+.luduvoDialog>.close svg:not([class*='size-']) {
+    width: 1rem;
+    height: 1rem;
+}
+
+.luduvoDialogCover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.235);
+    transition: 200ms;
+}
+
+@keyframes luduvo-in {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.95) translateY(25%);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1) translateY(0);
+    }
+}
+
+@keyframes luduvo-out {
+    from {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    to {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1.1);
+    }
+}
