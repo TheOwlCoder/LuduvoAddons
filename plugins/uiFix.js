@@ -94,7 +94,7 @@ if (addons.addonIsEnabled("lunes2USD")) {
             lunesTextEl.appendChild(span);
         }
         observer = new MutationObserver((e) => {
-            // convertNavPrice()
+            convertNavPrice()
             document.querySelectorAll('[data-slot="card"]').forEach(convertPrice);
         });
         observer.observe(document.body, { childList: true, subtree: true });
