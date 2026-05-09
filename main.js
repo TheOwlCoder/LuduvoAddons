@@ -32,6 +32,7 @@ async function onLoad() {
         await ui.setPageContentAsync(`
             <div class="container xl:px-16 px-4 md:mx-auto py-12 flex flex-col gap-8">
                 <h1 style="display: flex; align-items: center;" class="text-3xl md:text-5xl font-bold">Luduvo Addons Beta <button id="loadExternal" class="luduvoButton red" style="margin-left: 25px; margin-top: 8px;">Load External</button></h1>
+                <p>You are using the <b>CHROME</b> version of Luduvo Addons. Version 1.2</p>
                 <div id="addonsContainer">
                 </div>
                 <p style="color: var(--muted-foreground);">Addon created with &#10084;&#65039; by <a class="btLink" href="/profile/47">owl</a> and the community. Join the <a class="btLink" href="https://discord.gg/TBZacaR2Hd">Discord server</a>! Look at the <a class="btLink" href="https://github.com/TheOwlCoder/LuduvoAddons">GitHub repo</a>!</p>
