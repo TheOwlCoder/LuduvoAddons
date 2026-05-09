@@ -8,6 +8,7 @@ class Dialog {
     onConfirm = async ()=>{};
     async show() {
         const dialog = document.createElement("div");
+        this.dialog = dialog;
         const dialogCover = document.createElement("div");
         dialogCover.classList = "luduvoDialogCover"
         dialog.setAttribute("data-state", "open")
@@ -26,7 +27,6 @@ class Dialog {
             ${this.confirmText ? `<button role="confirmButton" class="luduvoButton red" data-slot="dialog-close">${this.confirmText}</button>` : ""}
         </div>
         <button type="button" data-slot="dialog-close" class="close"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-x "><path d="M18 6l-12 12"></path><path d="M6 6l12 12"></path></svg><span class="sr-only">Close</span></button>`;
-        this.dialog = dialog;
         if (this.confirmText) dialog.querySelector(`[role="confirmButton"]`).addEventListener("click", this.onConfirm);
         dialog.querySelectorAll(`[data-slot="dialog-close"]`).forEach(i => {
             i.onclick = e => {

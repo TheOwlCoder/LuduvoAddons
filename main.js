@@ -72,7 +72,7 @@ async function onLoad() {
         addons.registerAddon("UI Fixes", "uiFix", "Fixes broken or odd UI styling.");
         addons.registerAddon("Select Anything", "selAll", "Makes all text selectable.");
         addons.registerAddon("Inbox Categories", "ibCat", "Sorts your inbox notifications into categories.");
-        addons.registerAddon("Lunes to USD [BETA]", "lunes2USD", "Displays how much an item costs in USD.");
+        addons.registerAddon("Lunes to Money [BETA]", "lunes2USD", "Displays how much an item costs in your currency.", false, true);
         addons.registerAddon("Theming", "theming", "Allows advanced customization of the website's appearance.", false, true, ["matt"]);
         // FOR DEVELOPERS: It is recommended you clone this repo and develop your addon ins /plugins/test.js instead of loading it each update.
         // addons.registerAddon("My addon", "test", "my description");
