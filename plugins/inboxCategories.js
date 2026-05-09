@@ -2,8 +2,8 @@ if (addons.addonIsEnabled("ibCat")) {
     // console.log("load3wesknfnvwuj")
     const observer = new MutationObserver(() => {
         const popover = document.querySelector('[data-slot="popover-content"]');
-
         if (!popover || popover.getAttribute("loaded")) return;
+        if (!popover.firstChild.firstChild.innerText.includes("Inbox")) return;
 
         const listCon = popover.querySelector('.space-y-2');
         if (!listCon || listCon.children.length === 0) return;
