@@ -19,7 +19,7 @@ class Dialog {
         <h2 role="title" class="text-lg leading-none font-semibold">${this.title}</h2>
         <p role="description" class="text-muted-foreground text-sm">${this.description}</p>
         </div>
-        <div class="space-y-4">
+        <div class="space-y-4" role="dialogContent">
             ${this.content}
         </div>
         <div class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
@@ -27,6 +27,7 @@ class Dialog {
             ${this.confirmText ? `<button role="confirmButton" class="luduvoButton red" data-slot="dialog-close">${this.confirmText}</button>` : ""}
         </div>
         <button type="button" data-slot="dialog-close" class="close"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-x "><path d="M18 6l-12 12"></path><path d="M6 6l12 12"></path></svg><span class="sr-only">Close</span></button>`;
+        this.dialogContent = dialog.querySelector(`[role="dialogContent"]`);
         if (this.confirmText) dialog.querySelector(`[role="confirmButton"]`).addEventListener("click", this.onConfirm);
         dialog.querySelectorAll(`[data-slot="dialog-close"]`).forEach(i => {
             i.onclick = e => {

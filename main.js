@@ -110,8 +110,7 @@ async function onLoad() {
         })
 
         addons.registerAddon("No Subscriptions", "noSub", "Removes annoying subscription-only menus and advertisements.");
-        addons.registerAddon("UI Fixes", "uiFix", "Fixes broken or odd UI styling.");
-        addons.registerAddon("Select Anything", "selAll", "Makes all text selectable.");
+        addons.registerAddon("UI Fixes", "uiFix", "Fixes broken or odd UI styling.", false, true);
         addons.registerAddon("Inbox Categories", "ibCat", "Sorts your inbox notifications into categories.");
         addons.registerAddon("Lunes to Money [BETA]", "lunes2USD", "Displays how much an item costs in your currency.", false, true);
         addons.registerAddon("Theming", "theming", "Allows advanced customization of the website's appearance.", false, true, ["matt"]);

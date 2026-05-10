@@ -1,4 +1,9 @@
 if (addons.addonIsEnabled("uiFix")) {
+    addons.registerSettings("uiFix", (dialog) => {
+        dialog.onShow = () => {
+            addons.registerMicroAddon("Select Anything", "selAll", "Makes all text selectable.", dialog);
+        }
+    })
     let interval = null;
     addons.navigationAddon("/groups/*", () => {
         interval = setInterval(e => {
@@ -49,7 +54,7 @@ if (addons.addonIsEnabled("lunes2USD")) {
     addons.navigationAddon("/marketplace", async () => {
         if ((localStorage.getItem("l2currency") || "USD") != "USD") {
             conversion = await fetch(`https://api.frankfurter.dev/v2/rates?base=USD&quotes=${localStorage.getItem("l2currency")}`).then(r => r.json());
-            symbol = await fetch(`https://api.frankfurter.dev/v2/currency/${localStorage.getItem("l2currency")}`).then(r => r.json()).then(r=>r.symbol);
+            symbol = await fetch(`https://api.frankfurter.dev/v2/currency/${localStorage.getItem("l2currency")}`).then(r => r.json()).then(r => r.symbol);
         }
         async function convertPrice(card, index) {
             if (index == 0 || card.getAttribute("priced")) return 0;
@@ -62,7 +67,7 @@ if (addons.addonIsEnabled("lunes2USD")) {
                     console.log("usfd")
                     span.innerText = " $" + (Number(card.children[1].children[1].children[3].innerText) * 0.01).toFixed(2);
                 } else {
-                    span.innerText = " " + symbol  + (Number(card.children[1].children[1].children[3].innerText) * 0.01 * conversion[0].rate).toFixed(2);
+                    span.innerText = " " + symbol + (Number(card.children[1].children[1].children[3].innerText) * 0.01 * conversion[0].rate).toFixed(2);
                 }
                 card.children[1].children[1].appendChild(dot)
                 card.children[1].children[1].appendChild(span);

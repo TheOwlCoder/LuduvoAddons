@@ -1,7 +1,6 @@
 const addons = {
     addonsList: JSON.parse(localStorage.getItem("addonSettings")),
-    registerAddon: function (name, id, description = "", settings, authors) {
-        console.log(settings, id)
+    registerAddon: function (name, id, description = "", custom, settings, authors) {
         if (!ui.inSandbox) { throw new Error("This function is only available to the extension."); return 0; }
         const pluginContainer = document.createElement("div");
         pluginContainer.className = "flex items-center justify-between";
@@ -48,8 +47,7 @@ const addons = {
         }
         document.querySelector("#addonsContainer").appendChild(pluginContainer);
     },
-    registerMicroAddon: function (name, id, description = "", custom, authors, dialog) {
-        console.log(settings, id)
+    registerMicroAddon: function (name, id, description = "", dialog, authors) {
         const pluginContainer = document.createElement("div");
         pluginContainer.className = "flex items-center justify-between";
         pluginContainer.innerHTML = `
@@ -66,21 +64,12 @@ const addons = {
         `;
         const btn = pluginContainer.querySelector(`[role="addonButton"]`);
         btn.addEventListener("click", e => {
-            if (custom && e.shiftKey) {
-                e.preventDefault();
-                const customAddons = JSON.parse(localStorage.getItem("customAddons"));
-                delete customAddons[id];
-                delete localStorage[id + "JS"]
-                localStorage.setItem("customAddons", JSON.stringify(customAddons));
-                pluginContainer.remove();
-                return 0;
-            }
             addons.addonsList = JSON.parse(localStorage.getItem("addonSettings"));
             addons.addonsList[id] = !addons.addonsList[id];
             btn.innerText = addons.addonsList[id] ? "Enabled" : "Disabled";
             localStorage.setItem("addonSettings", JSON.stringify(addons.addonsList));
         });
-        dialog.dialog.appendChild(pluginContainer);
+        dialog.dialogContent.appendChild(pluginContainer);
     },
     registerSettings: (id, callback) => {
         addons.navigationAddon("/addons", async e => {
