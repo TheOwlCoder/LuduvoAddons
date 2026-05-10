@@ -1,6 +1,6 @@
 const addons = {
     addonsList: JSON.parse(localStorage.getItem("addonSettings")),
-    registerAddon: function (name, id, description = "", custom, settings, authors) {
+    registerAddon: function (name, id, description = "", settings, authors) {
         console.log(settings, id)
         if (!ui.inSandbox) { throw new Error("This function is only available to the extension."); return 0; }
         const pluginContainer = document.createElement("div");
@@ -13,7 +13,7 @@ const addons = {
                     ${authors ? "<br>Authors: " + authors.map(r => `<b>${r}</b>`).join(", ") : ""}
                 </span>
             </div>
-            <div>
+            <div class="addonBtns">
                 <button class="luduvoButton" role="settingsButton ${id}" ${settings && addons.addonIsEnabled(id) ? "" : "disabled"}>Settings</button>
                 <button class="luduvoButton" role="addonButton" style="width: 5rem">${addons.addonsList[id] ? "Enabled" : "Disabled"}</button>
             </div>
@@ -47,6 +47,40 @@ const addons = {
             })
         }
         document.querySelector("#addonsContainer").appendChild(pluginContainer);
+    },
+    registerMicroAddon: function (name, id, description = "", custom, authors, dialog) {
+        console.log(settings, id)
+        const pluginContainer = document.createElement("div");
+        pluginContainer.className = "flex items-center justify-between";
+        pluginContainer.innerHTML = `
+            <div>
+                <b>${name.replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("[BETA]", `<span style="color: #ffad55; padding: 0 7px;">BETA</span>`)}</b><br>
+                <span class="opacity-60">
+                    ${description.replaceAll("<", "&lt;").replaceAll(">", "&gt;")}
+                    ${authors ? "<br>Authors: " + authors.map(r => `<b>${r}</b>`).join(", ") : ""}
+                </span>
+            </div>
+            <div class="addonBtns">
+                <button class="luduvoButton" role="addonButton" style="width: 5rem">${addons.addonsList[id] ? "Enabled" : "Disabled"}</button>
+            </div>
+        `;
+        const btn = pluginContainer.querySelector(`[role="addonButton"]`);
+        btn.addEventListener("click", e => {
+            if (custom && e.shiftKey) {
+                e.preventDefault();
+                const customAddons = JSON.parse(localStorage.getItem("customAddons"));
+                delete customAddons[id];
+                delete localStorage[id + "JS"]
+                localStorage.setItem("customAddons", JSON.stringify(customAddons));
+                pluginContainer.remove();
+                return 0;
+            }
+            addons.addonsList = JSON.parse(localStorage.getItem("addonSettings"));
+            addons.addonsList[id] = !addons.addonsList[id];
+            btn.innerText = addons.addonsList[id] ? "Enabled" : "Disabled";
+            localStorage.setItem("addonSettings", JSON.stringify(addons.addonsList));
+        });
+        dialog.dialog.appendChild(pluginContainer);
     },
     registerSettings: (id, callback) => {
         addons.navigationAddon("/addons", async e => {
